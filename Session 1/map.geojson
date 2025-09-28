@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Masjid RI"
+      },
+      "geometry": {
+        "coordinates": [
+          106.87317159631249,
+          -6.905952726976338
+        ],
+        "type": "Point"
+      },
+      "id": 0
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nusa Putra University"
+      },
+      "geometry": {
+        "coordinates": [
+          106.87316146288003,
+          -6.90534975561188
+        ],
+        "type": "Point"
+      },
+      "id": 1
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "campus area"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              106.87302711161931,
+              -6.905120492274634
+            ],
+            [
+              106.87298398645413,
+              -6.905592440238252
+            ],
+            [
+              106.8734378203207,
+              -6.905560258695971
+            ],
+            [
+              106.87345943145743,
+              -6.905152625635779
+            ],
+            [
+              106.87302711161931,
+              -6.905120492274634
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": 2
+    }
+  ]
+}
