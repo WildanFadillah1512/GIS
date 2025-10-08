@@ -1,33 +1,38 @@
-html, body, #map {
+html, body {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: sans-serif;
+}
+
+h2 {
+    margin-left: 15px;
+}
+
+#mapMercator, #map4326 {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .leaflet-popup-content-wrapper {
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 .popup-content h3 {
-    margin: 0 0 8px 0;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #eee;
-    color: #1a1a1a;
-    font-size: 1.1em;
+    margin: 0 0 5px 0;
+    color: #333;
 }
 
 .popup-content p {
-    margin: 4px 0;
-    color: #555;
-    line-height: 1.4;
+    margin: 0;
+    color: #666;
 }
 
 .popup-content span {
-    font-size: 0.85em;
+    font-size: 0.9em;
     color: #999;
     display: block;
-    margin-top: 8px;
+    margin-top: 5px;
 }

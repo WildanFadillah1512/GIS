@@ -1,24 +1,32 @@
-const map = L.map('map').setView([-6.925, 106.92], 13);
-
+const mapMercator = L.map('mapMercator').setView([-6.925, 106.92], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+}).addTo(mapMercator);
+
+const map4326 = L.map('map4326', {
+    crs: L.CRS.EPSG4326
+}).setView([-6.925, 106.92], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map4326);
 
 function styleFeature(feature) {
     switch (feature.geometry.type) {
         case 'LineString':
-            return { color: "#ff0000", weight: 4, opacity: 0.8 }; 
+            return { color: "#ff0000", weight: 4, opacity: 0.8 };
         case 'Polygon':
-            return { color: "#ff7800", weight: 2, fillColor: '#ff7800', fillOpacity: 0.4 }; 
+            return { color: "#ff7800", weight: 2, fillColor: '#ff7800', fillOpacity: 0.4 };
         default:
-            return {}; 
+            return {};
     }
 }
+
 function onEachFeature(feature, layer) {
     if (feature.properties) {
         let popupText = '<div class="popup-content">';
-
+        
         if (feature.properties.nama) {
             popupText += `<h3>${feature.properties.nama}</h3>`;
         } else if (feature.properties.nama_jalan) {
@@ -41,20 +49,25 @@ function onEachFeature(feature, layer) {
     }
 }
 
-fetch('map.geojson')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        L.geoJSON(data, {
-            style: styleFeature,
-            onEachFeature: onEachFeature
-        }).addTo(map);
-    })
-    .catch(error => {
-        console.error('Error memuat atau menampilkan data GeoJSON:', error);
-        document.getElementById('map').innerHTML = `<div style="padding: 20px;"><h1>Error</h1><p>Gagal memuat file <strong>map.geojson</strong>. Pastikan file tersebut ada di folder yang sama dengan index.html.</p></div>`;
-    });
+function loadGeoJsonToMap(mapInstance) {
+    fetch('map.geojson')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            L.geoJSON(data, {
+                style: styleFeature,
+                onEachFeature: onEachFeature
+            }).addTo(mapInstance);
+        })
+        .catch(error => {
+            console.error('Error memuat atau menampilkan data GeoJSON:', error);
+            mapInstance.getContainer().innerHTML = `<div style="padding: 20px;"><h1>Error</h1><p>Gagal memuat file <strong>map.geojson</strong>. Pastikan file tersebut ada di folder yang sama.</p></div>`;
+        });
+}
+
+loadGeoJsonToMap(mapMercator);
+loadGeoJsonToMap(map4326);
