@@ -8,11 +8,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 function styleFeature(feature) {
     switch (feature.geometry.type) {
         case 'LineString':
-            return { color: "#ff0000", weight: 4, opacity: 0.8 }; // Merah untuk garis macet
+            return { color: "#ff0000", weight: 4, opacity: 0.8 }; 
         case 'Polygon':
-            return { color: "#ff7800", weight: 2, fillColor: '#ff7800', fillOpacity: 0.4 }; // Oranye untuk area macet
+            return { color: "#ff7800", weight: 2, fillColor: '#ff7800', fillOpacity: 0.4 }; 
         default:
-            return {}; // Style default untuk Point
+            return {}; 
     }
 }
 function onEachFeature(feature, layer) {
