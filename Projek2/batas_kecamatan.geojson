@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nama_kecamatan": "Kecamatan Cikole",
+        "kode_wilayah": "32.72.01"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [106.9213, -6.9039],
+            [106.9425, -6.9095],
+            [106.9360, -6.9234],
+            [106.9185, -6.9192],
+            [106.9213, -6.9039]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nama_kecamatan": "Kecamatan Citamiang",
+        "kode_wilayah": "32.72.02"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [106.9185, -6.9192],
+            [106.9360, -6.9234],
+            [106.9248, -6.9372],
+            [106.9122, -6.9288],
+            [106.9185, -6.9192]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nama_kecamatan": "Kecamatan Warudoyong",
+        "kode_wilayah": "32.72.04"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [106.8994, -6.9150],
+            [106.9122, -6.9288],
+            [106.9030, -6.9380],
+            [106.8911, -6.9250],
+            [106.8994, -6.9150]
+          ]
+        ]
+      }
+    }
+  ]
+}

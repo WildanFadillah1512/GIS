@@ -1,48 +1,64 @@
 {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Universitas Nusa Putra",
-        "type": "Marker"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [106.934, -7.169]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Jalan Raya Sukabumi",
-        "type": "Polyline"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [106.9, -7.05],
-          [106.93, -7.1],
-          [106.95, -7.15]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Kecamatan Cikole",
-        "type": "Polygon"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [106.92, -7.12],
-          [106.93, -7.13],
-          [106.94, -7.12],
-          [106.93, -7.11],
-          [106.92, -7.12]
-        ]]
-      }
-    }
-  ]
+    "type": "FeatureCollection",
+    "features": [{
+        "type": "Feature",
+        "properties": { "nama": "Universitas Nusa Putra", "kategori": "Pendidikan", "deskripsi": "Kampus besar, sumber bangkitan perjalanan utama mahasiswa dan staf di area Cisaat." },
+        "geometry": { "coordinates": [106.87315728346522, -6.905587108164639], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Pasar Cisaat", "kategori": "Pasar Tradisional", "deskripsi": "Pasar yang ramai, menyebabkan kepadatan lalu lintas terutama pada pagi hari." },
+        "geometry": { "coordinates": [106.89325365146675, -6.905859422160738], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Citimall Sukabumi", "kategori": "Pusat Perbelanjaan", "deskripsi": "Mal terbesar di Sukabumi, menjadi pusat tarikan lalu lintas utama, terutama di akhir pekan." },
+        "geometry": { "coordinates": [106.928630751467, -6.922081029535258], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Stasiun Sukabumi", "kategori": "Transportasi", "deskripsi": "Stasiun kereta api utama, titik kedatangan dan keberangkatan penumpang yang signifikan." },
+        "geometry": { "coordinates": [106.92960048879814, -6.924796784914659], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Terminal Bus K.H. Ahmad Sanusi", "kategori": "Transportasi", "deskripsi": "Terminal bus tipe A, pusat pergerakan bus antar kota dan provinsi." },
+        "geometry": { "coordinates": [106.92502353447722, -6.95038813649294], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Kantor Walikota Sukabumi", "kategori": "Pemerintahan/Layanan Publik", "deskripsi": "Pusat pemerintahan kota, menjadi tujuan utama pada jam kerja." },
+        "geometry": { "coordinates": [106.93155423797464, -6.9177669843217755], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Polres Sukabumi Kota", "kategori": "Pemerintahan/Layanan Publik", "deskripsi": "Kantor polisi pusat, area dengan lalu lintas yang sering padat." },
+        "geometry": { "coordinates": [106.92654543427216, -6.920868931873895], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "SMAN 1 Sukabumi", "kategori": "Pendidikan", "deskripsi": "Sekolah menengah atas favorit, menyebabkan kepadatan pada jam masuk dan pulang sekolah." },
+        "geometry": { "coordinates": [106.93050953612375, -6.938487038623204], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "SMAN 3 Sukabumi", "kategori": "Pendidikan", "deskripsi": "Sekolah menengah atas besar di pusat kota, kontributor kemacetan jam sibuk." },
+        "geometry": { "coordinates": [106.94448934844024, -6.920626248860374], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Pasar Pelita", "kategori": "Pasar Tradisional", "deskripsi": "Pasar tradisional terbesar dan tersibuk di Sukabumi, sumber kemacetan utama di sekitarnya." },
+        "geometry": { "coordinates": [106.93074921204176, -6.923031257995377], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Simpang Degung", "kategori": "Persimpangan Kritis", "deskripsi": "Salah satu persimpangan tersibuk di Sukabumi, titik pertemuan beberapa jalan utama." },
+        "geometry": { "coordinates": [106.927185, -6.914722], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama": "Lapang Merdeka Sukabumi", "kategori": "Area Publik", "deskripsi": "Alun-alun kota, pusat kegiatan masyarakat yang menarik lalu lintas terutama sore dan malam hari." },
+        "geometry": { "coordinates": [106.92676327845149, -6.91967333141645], "type": "Point" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama_jalan": "Jl. Suryakencana", "status_jam_sibuk": "Macet Parah", "sumber_data": "Observasi Google Maps 6:20 WIB" },
+        "geometry": { "coordinates": [ [ [106.77871178431332, -6.884479850607136], [106.78041587491077, -6.889244937483312], [106.78063261960358, -6.889121955060659], [106.77891990434404, -6.884358374986903], [106.77871178431332, -6.884479850607136] ] ], "type": "Polygon" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama_jalan": "Jalan Raya Sukabumi", "status_jam_sibuk": "Macet Parah", "sumber_data": "Observasi Google Maps 6:20 WIB" },
+        "geometry": { "coordinates": [ [ [106.80772981311611, -6.895078362240213], [106.81880611986128, -6.896598221324979], [106.81887948955091, -6.896439434524865], [106.80773550037105, -6.89486121126923], [106.80772981311611, -6.895078362240213] ] ], "type": "Polygon" }
+    }, {
+        "type": "Feature",
+        "properties": { "nama_jalan": "Jalan Raya Sukabumi", "status_jam_sibuk": "Macet Parah", "sumber_data": "Observasi Google Maps 6:50 WIB" },
+        "geometry": { "coordinates": [ [106.8187840501663, -6.896641947138974], [106.82068153553621, -6.897462202740286], [106.82277921652798, -6.899089688159094], [106.82367779556779, -6.899682894351457], [106.82371467210453, -6.899423813606731], [106.82292562840001, -6.898950814834421], [106.82066848198639, -6.897230004695032], [106.81891941525794, -6.896398426158285], [106.81881774484697, -6.896642900121961] ], "type": "LineString" }
+    }]
 }

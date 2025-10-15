@@ -1,18 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peta Sukabumi</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tugas Peta Sukabumi - Selesai</title>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
+
 <body>
-  <h2>Peta Persebaran Wilayah Sukabumi</h2>
+  <h2>Proyek Peta Sukabumi (Tugas Selesai)</h2>
   <div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-providers@1.13.0/leaflet-providers.js"></script>
-  <script src="script.js"></script>
+  <script>
+    const center = [-6.925, 106.91];
+    const zoom = 13;
+
+    const map = L.map("map").setView(center, zoom);
+
+    // --- BASE MAPS (2 Peta Dasar) ---
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri'
+    });
+
+    osm.addTo(map);
+
+    // --- OVERLAYS (3 Lapisan Sesuai Tugas) ---
+
+    // ## OVERLAY 1: Lapisan Khusus Marker (Point)
+    const markerLayer = L.geoJSON(null, {
+        // Filter ini hanya akan memproses fitur yang tipenya 'Point'
+        filter: (feature) => {
+            return feature.geometry.type === 'Point';
+        },
+        pointToLayer: (feature, latlng) => {
+            const kategori = feature.properties.kategori;
+            let color = 'red'; // Warna default
+            if (kategori === 'Pendidikan') color = 'blue';
+            if (kategori === 'Transportasi') color = 'green';
+            if (kategori === 'Pasar Tradisional') color = 'orange';
+            return L.circleMarker(latlng, { radius: 7, fillColor: color, color: "#000", weight: 1, fillOpacity: 0.8 });
+        },
+        onEachFeature: (feature, layer) => {
+            const props = feature.properties;
+            layer.bindPopup(`<strong>${props.nama}</strong><br>${props.deskripsi}`);
+        }
+    });
+
+    // ## OVERLAY 2: Lapisan Khusus Polyline (LineString)
+    const polylineLayer = L.geoJSON(null, {
+        // Filter ini hanya akan memproses fitur yang tipenya 'LineString'
+        filter: (feature) => {
+            return feature.geometry.type === 'LineString';
+        },
+        style: {
+            color: "#FF0000", // Merah terang untuk jalan macet
+            weight: 5,
+            opacity: 0.7
+        },
+        onEachFeature: (feature, layer) => {
+            const props = feature.properties;
+            layer.bindPopup(`<strong>${props.nama_jalan}</strong><br>Status: ${props.status_jam_sibuk}`);
+        }
+    });
+
+    // ## OVERLAY 3: Lapisan Khusus Polygon
+    const polygonLayer = L.geoJSON(null, {
+        // Filter ini hanya akan memproses fitur yang tipenya 'Polygon'
+        filter: (feature) => {
+            return feature.geometry.type === 'Polygon';
+        },
+        style: {
+            color: 'purple',
+            weight: 2,
+            fillOpacity: 0.4
+        },
+        onEachFeature: (feature, layer) => {
+            const props = feature.properties;
+            // Kita bisa tambahkan polygon dari batas kecamatan di sini juga
+            if (props.nama_jalan) {
+                layer.bindPopup(`<strong>Area Jalan: ${props.nama_jalan}</strong><br>Status: ${props.status_jam_sibuk}`);
+            } else if (props.nama_kecamatan) {
+                layer.bindPopup(`<strong>Kecamatan ${props.nama_kecamatan}</strong>`);
+            }
+        }
+    });
+
+    // --- Memuat Data GeoJSON dan Mendistribusikannya ke Layer yang Tepat ---
+    fetch("map.geojson")
+      .then(res => res.json())
+      .then(data => {
+        // Balikkan koordinat untuk Point
+        data.features.forEach(feature => {
+            if (feature.geometry.type === 'Point') {
+                const [lng, lat] = feature.geometry.coordinates;
+                feature.geometry.coordinates = [lat, lng];
+            }
+        });
+        // Tambahkan data yang sama ke semua 3 layer, filter akan menyortirnya
+        markerLayer.addData(data);
+        polylineLayer.addData(data);
+        polygonLayer.addData(data);
+      });
+
+    // Kita juga bisa memuat data batas kecamatan dan menambahkannya ke layer polygon
+    fetch("batas_kecamatan.geojson")
+      .then(res => res.json())
+      .then(data => polygonLayer.addData(data));
+
+
+    // --- KONTROL PETA ---
+    const baseMaps = {
+      "OpenStreetMap": osm,
+      "Satelit": satellite
+    };
+
+    const overlayMaps = {
+      "Lokasi Penting (Marker)": markerLayer,
+      "Jalan Macet (Polyline)": polylineLayer,
+      "Area Wilayah (Polygon)": polygonLayer
+    };
+
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+    L.control.scale({ position: "bottomleft" }).addTo(map);
+
+    // Tambahkan layer ke peta secara default saat pertama dibuka
+    markerLayer.addTo(map);
+    polylineLayer.addTo(map);
+    polygonLayer.addTo(map);
+
+  </script>
 </body>
 </html>
