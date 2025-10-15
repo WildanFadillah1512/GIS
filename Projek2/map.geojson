@@ -1,0 +1,48 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Nusa Putra",
+        "type": "Marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [106.934, -7.169]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jalan Raya Sukabumi",
+        "type": "Polyline"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.9, -7.05],
+          [106.93, -7.1],
+          [106.95, -7.15]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kecamatan Cikole",
+        "type": "Polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.92, -7.12],
+          [106.93, -7.13],
+          [106.94, -7.12],
+          [106.93, -7.11],
+          [106.92, -7.12]
+        ]]
+      }
+    }
+  ]
+}
