@@ -1,38 +1,60 @@
-html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 
 h2 {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
-#mapMercator, #map4326 {
-    height: 400px;
-    width: 100%;
-    margin-bottom: 20px;
+#mapMercator,
+#map4326 {
+  height: 400px;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .leaflet-popup-content-wrapper {
-    border-radius: 8px;
+  border-radius: 8px;
 }
 
 .popup-content h3 {
-    margin: 0 0 5px 0;
-    color: #333;
+  margin: 0 0 5px 0;
+  color: #333;
 }
 
 .popup-content p {
-    margin: 0;
-    color: #666;
+  margin: 0;
+  color: #666;
 }
 
 .popup-content span {
-    font-size: 0.9em;
-    color: #999;
-    display: block;
-    margin-top: 5px;
+  font-size: 0.9em;
+  color: #999;
+  display: block;
+  margin-top: 5px;
+}
+
+/* Gaya baru untuk tombol interaktif */
+.btn-action {
+  background-color: #d9534f; /* Merah untuk Peringatan/Aksi */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-action:hover {
+  background-color: #c9302c;
 }
