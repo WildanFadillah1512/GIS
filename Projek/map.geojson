@@ -128,7 +128,10 @@
         "kategori": "Persimpangan Kritis",
         "deskripsi": "Salah satu persimpangan tersibuk di Sukabumi, titik pertemuan beberapa jalan utama."
       },
-      "geometry": { "coordinates": [106.927185, -6.914722], "type": "Point" }
+      "geometry": {
+        "coordinates": [106.927185, -6.914722],
+        "type": "Point"
+      }
     },
     {
       "type": "Feature",

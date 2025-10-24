@@ -3,20 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Map Projection Comparison</title>
+    <title>SIAP Macet - Dashboard Analitik Kemacetan Sukabumi</title>
 
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>Default Map (Web Mercator - EPSG:3857)</h2>
-    <div id="mapMercator"></div>
+    <div class="dashboard-container">
+      <div class="sidebar">
+        <div class="logo-section">
+          <div class="logo-title">SIAP Macet</div>
+          <div class="logo-subtitle">
+            Sistem Informasi Analitik Peta Kemacetan
+          </div>
+        </div>
 
-    <h2>Map EPSG:4326</h2>
-    <div id="map4326"></div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">13</div>
+            <div class="stat-label">Titik Bangkitan</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Ruas Macet</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Peta Dasar</div>
+          <div class="basemap-selector">
+            <div class="basemap-btn active" onclick="changeBasemap('osm')">
+              <div class="basemap-icon">🗺️</div>
+              <div class="basemap-label">OpenStreetMap</div>
+            </div>
+            <div class="basemap-btn" onclick="changeBasemap('satellite')">
+              <div class="basemap-icon">🛰️</div>
+              <div class="basemap-label">Citra Satelit</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lapisan Data</div>
+          <div class="layer-control">
+            <div class="layer-item active" onclick="toggleLayer('points')">
+              <input
+                type="checkbox"
+                class="layer-checkbox"
+                id="points-check"
+                checked
+              />
+              <div class="layer-info">
+                <div class="layer-name">Titik Bangkitan</div>
+                <div class="layer-desc">Lokasi sumber kemacetan</div>
+              </div>
+              <div
+                class="layer-color"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626)"
+              ></div>
+            </div>
+            <div class="layer-item active" onclick="toggleLayer('roads')">
+              <input
+                type="checkbox"
+                class="layer-checkbox"
+                id="roads-check"
+                checked
+              />
+              <div class="layer-info">
+                <div class="layer-name">Jalan Macet</div>
+                <div class="layer-desc">Ruas jalan rawan macet</div>
+              </div>
+              <div
+                class="layer-color"
+                style="background: linear-gradient(135deg, #f59e0b, #d97706)"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-overlay">
+          <div class="overlay-title">Legenda</div>
+          <div class="legend-item">
+            <div
+              class="legend-color"
+              style="background: linear-gradient(135deg, #ef4444, #dc2626)"
+            ></div>
+            <div class="legend-label">Titik Bangkitan</div>
+          </div>
+          <div class="legend-item">
+            <div
+              class="legend-color"
+              style="background: linear-gradient(135deg, #f59e0b, #d97706)"
+            ></div>
+            <div class="legend-label">Jalan Macet Parah</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>

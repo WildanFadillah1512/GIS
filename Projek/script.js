@@ -1,200 +1,137 @@
-// --- Inisialisasi Peta ---
-const mapMercator = L.map("mapMercator").setView([-6.925, 106.92], 13);
-const map4326 = L.map("map4326", {
-  crs: L.CRS.EPSG4326,
-}).setView([-6.925, 106.92], 13);
+// Inisialisasi Peta
+const map = L.map("map", {
+  zoomControl: false,
+}).setView([-6.92, 106.925], 13);
 
-// --- CUSTOM ICON ---
-// Menggunakan ikon merah khusus untuk membedakan Titik Penting Lalu Lintas
-const trafficIcon = L.icon({
-  iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+L.control
+  .zoom({
+    position: "bottomright",
+  })
+  .addTo(map);
 
-// --- BASEMAPS ---
-const osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-});
-
-const satellite = L.tileLayer(
-  "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+// Layer Peta Dasar
+const osmLayer = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
-    maxZoom: 20,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    attribution: "Map data &copy; Google Satellite",
+    attribution: "© OpenStreetMap contributors",
+  }
+).addTo(map);
+
+const satelliteLayer = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "© Esri",
   }
 );
 
-// Layer WMS OSM (EPSG:4326)
-const wms4326 = L.tileLayer.wms("http://ows.mundialis.de/services/service?", {
-  layers: "OSM-WMS",
-  format: "image/png",
-  transparent: true,
-  attribution:
-    "Map data © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
-});
+let pointsLayer;
+let roadsLayer;
 
-osm.addTo(mapMercator);
-wms4326.addTo(map4326);
+// FUNGSI UTAMA: Memuat data GeoJSON dari map.geojson
+fetch("./map.geojson")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(
+        "Gagal memuat map.geojson. Pastikan file ada di direktori yang sama."
+      );
+    }
+    return response.json();
+  })
+  .then((geojsonData) => {
+    // Custom icons
+    const pointIcon = L.divIcon({
+      className: "custom-marker",
+      html: '<div style="background: linear-gradient(135deg, #ef4444, #dc2626); width: 14px; height: 14px; border-radius: 50%; border: 3px solid rgba(239, 68, 68, 0.3); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);"></div>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    });
 
-// --- FUNGSI GAYA DAN POPUP ---
-function styleFeature(feature) {
-  switch (feature.geometry.type) {
-    case "LineString":
-      // Gaya untuk Jalur Macet
-      return { color: "#ff0000", weight: 4, opacity: 0.8 };
-    case "Polygon":
-      // Gaya untuk Area Macet
-      return {
-        color: "#ff7800",
-        weight: 2,
-        fillColor: "#ff7800",
-        fillOpacity: 0.4,
-      };
-    default:
-      return {};
+    // Layer Titik Bangkitan (Points)
+    pointsLayer = L.geoJSON(geojsonData, {
+      filter: (f) => f.geometry.type === "Point",
+      pointToLayer: (f, latlng) => L.marker(latlng, { icon: pointIcon }),
+      onEachFeature: (f, layer) => {
+        if (f.properties.nama) {
+          layer.bindPopup(`
+                        <div class="popup-title">${f.properties.nama}</div>
+                        <div class="popup-category">${f.properties.kategori}</div>
+                        <div class="popup-desc">${f.properties.deskripsi}</div>
+                    `);
+        }
+      },
+    }).addTo(map);
+
+    // Layer Jalan Macet (LineStrings/Polygons)
+    roadsLayer = L.geoJSON(geojsonData, {
+      filter: (f) =>
+        f.geometry.type === "LineString" || f.geometry.type === "Polygon",
+      style: {
+        color: "#f59e0b",
+        weight: 4,
+        opacity: 0.8,
+        fillColor: "#f59e0b",
+        fillOpacity: 0.3,
+      },
+      onEachFeature: (f, layer) => {
+        if (f.properties.nama_jalan) {
+          layer.bindPopup(`
+                        <div class="popup-title">${f.properties.nama_jalan}</div>
+                        <div class="popup-category">${f.properties.status_jam_sibuk}</div>
+                        <div class="popup-desc">Sumber: ${f.properties.sumber_data}</div>
+                    `);
+        }
+      },
+    }).addTo(map);
+
+    // Set batas peta agar sesuai dengan data
+    const bounds = L.geoJSON(geojsonData).getBounds();
+    map.fitBounds(bounds, { padding: [50, 50] });
+  })
+  .catch((error) => {
+    console.error("Error memuat data GeoJSON:", error);
+    alert("Gagal memuat data peta: " + error.message);
+  });
+
+// Functions
+function changeBasemap(type) {
+  document
+    .querySelectorAll(".basemap-btn")
+    .forEach((btn) => btn.classList.remove("active"));
+  event.target.closest(".basemap-btn").classList.add("active");
+
+  if (type === "osm") {
+    map.removeLayer(satelliteLayer);
+    map.addLayer(osmLayer);
+  } else {
+    map.removeLayer(osmLayer);
+    map.addLayer(satelliteLayer);
   }
 }
 
-// FUNGSI INTI UNTUK INTERAKTIVITAS (Popup, Tooltip, Events)
-function onEachFeature(feature, layer) {
-  if (feature.properties) {
-    let popupText = '<div class="popup-content">';
-    let name =
-      feature.properties.nama ||
-      feature.properties.nama_jalan ||
-      "Lokasi Tak Dikenal";
+function toggleLayer(layer) {
+  const checkbox = document.getElementById(layer + "-check");
+  const item = event.target.closest(".layer-item");
 
-    // 1. TOOLTIP (Info singkat saat kursor hover)
-    layer.bindTooltip(name, {
-      permanent: false,
-      direction: "top",
-    });
-
-    // 2. POPUP DENGAN INTERACTIVE HTML (Detail saat diklik)
-    if (feature.geometry.type === "Point") {
-      // Konten interaktif hanya untuk Marker (Titik Penting)
-      popupText += `<h3>${name}</h3>`;
-      if (feature.properties.kategori) {
-        popupText += `<p><strong>Kategori:</strong> ${feature.properties.kategori}</p>`;
-      }
-      if (feature.properties.deskripsi) {
-        popupText += `<p>${feature.properties.deskripsi}</p>`;
-      }
-
-      // Menambahkan tombol interaktif/event (Modul 3 & 4)
-      if (feature.properties.kategori.includes("Pemerintahan")) {
-        // Contoh interaktivitas: Tombol untuk Simulasi Penempatan Petugas
-        popupText += `<hr><button class="btn-action" onclick="console.log('--- EVENT LOG --- Simulasi penempatan petugas diarahkan ke ${name}'); layer._map.setView(layer.getLatLng(), 15);">Simulasi Penempatan Petugas</button>`;
-      } else {
-        // Tombol aksi umum
-        popupText += `<hr><button class="btn-action" onclick="alert('Laporan data lalu lintas real-time dari ${name} sedang dimuat...');">Tarik Data Live</button>`;
-      }
+  // Memastikan layer sudah dimuat sebelum toggle
+  if (layer === "points" && pointsLayer) {
+    if (map.hasLayer(pointsLayer)) {
+      map.removeLayer(pointsLayer);
+      checkbox.checked = false;
+      item.classList.remove("active");
     } else {
-      // Konten untuk Line/Polygon (Kemacetan)
-      popupText += `<h3>${name}</h3>`;
-      popupText += `<p><strong>Status:</strong> ${feature.properties.status_jam_sibuk}</p>`;
-      popupText += `<span>Sumber: ${feature.properties.sumber_data}</span>`;
+      map.addLayer(pointsLayer);
+      checkbox.checked = true;
+      item.classList.add("active");
     }
-
-    popupText += "</div>";
-    layer.bindPopup(popupText);
-
-    // 3. EVENT HANDLING (Click Event pada Marker)
-    if (feature.geometry.type === "Point") {
-      layer.on("click", function (e) {
-        console.log(
-          `--- EVENT LOG --- Marker ${name} diklik pada koordinat ${e.latlng.lat.toFixed(
-            4
-          )}, ${e.latlng.lng.toFixed(4)}.`
-        );
-        // Anda bisa menambahkan logika peringatan di sini (Modul 4)
-      });
+  } else if (layer === "roads" && roadsLayer) {
+    if (map.hasLayer(roadsLayer)) {
+      map.removeLayer(roadsLayer);
+      checkbox.checked = false;
+      item.classList.remove("active");
+    } else {
+      map.addLayer(roadsLayer);
+      checkbox.checked = true;
+      item.classList.add("active");
     }
   }
 }
-
-// --- FUNGSI UTAMA MUAT GEOJSON ---
-function loadGeoJsonToMap(mapInstance) {
-  fetch("map.geojson")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Inisialisasi Layer Group untuk Overlay
-      const pointMarkers = L.featureGroup();
-      const polylineLayers = L.featureGroup();
-      const polygonLayers = L.featureGroup();
-
-      L.geoJSON(data, {
-        // 4. CUSTOM ICON (Digunakan di sini)
-        pointToLayer: function (feature, latlng) {
-          if (feature.properties.kategori) {
-            return L.marker(latlng, { icon: trafficIcon });
-          }
-          return L.marker(latlng);
-        },
-        style: styleFeature,
-        onEachFeature: function (feature, layer) {
-          onEachFeature(feature, layer);
-          switch (feature.geometry.type) {
-            case "Point":
-              pointMarkers.addLayer(layer);
-              break;
-            case "LineString":
-              polylineLayers.addLayer(layer);
-              break;
-            case "Polygon":
-              polygonLayers.addLayer(layer);
-              break;
-          }
-        },
-      });
-
-      // Tambahkan semua overlay default ke peta
-      pointMarkers.addTo(mapInstance);
-      polylineLayers.addTo(mapInstance);
-      polygonLayers.addTo(mapInstance);
-
-      // --- LAYER CONTROL ---
-      const overlayMaps = {
-        "Marker Penting (Point)": pointMarkers,
-        "Jalur Macet (LineString)": polylineLayers,
-        "Area Macet (Polygon)": polygonLayers,
-      };
-
-      let baseMaps;
-
-      if (mapInstance === mapMercator) {
-        baseMaps = {
-          "OpenStreetMap (3857)": osm,
-          "Satelit Google (3857)": satellite,
-        };
-      } else {
-        // Hanya WMS Layer yang kompatibel dengan CRS 4326
-        baseMaps = {
-          "OSM-WMS (4326)": wms4326,
-        };
-      }
-
-      L.control.layers(baseMaps, overlayMaps).addTo(mapInstance);
-    })
-    .catch((error) => {
-      console.error("Error memuat atau menampilkan data GeoJSON:", error);
-      mapInstance.getContainer().innerHTML = `<div style="padding: 20px;"><h1>Error</h1><p>Gagal memuat file <strong>map.geojson</strong>. Pastikan file tersebut ada di folder yang sama.</p></div>`;
-    });
-}
-
-loadGeoJsonToMap(mapMercator);
-loadGeoJsonToMap(map4326);
